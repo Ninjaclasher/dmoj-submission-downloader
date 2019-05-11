@@ -14,7 +14,7 @@ class SubmissionDownloader:
     # delay between requests
     REQUEST_DELAY = 1
     # when self.best_only = True, store the best submission based on this order
-    ORDER = ['AC', 'WA', 'TLE', 'MLE', 'OLE', 'IR', 'RTE', 'CE', 'IE', 'AB']
+    ORDER = ['AC', '_AC', 'WA', 'TLE', 'MLE', 'OLE', 'IR', 'RTE', 'CE', 'IE', 'AB']
     reid = re.compile(r'<tr id="(\d*)">\n<td class="sub-result (\w*)">.*?<a href="/user/(\w*)">', re.DOTALL)
 
     def __init__(self, problem_code, cookies, best_only, echo=print):
