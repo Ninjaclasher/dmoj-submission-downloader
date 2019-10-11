@@ -15,7 +15,8 @@ class SubmissionDownloader:
     REQUEST_DELAY = 1
     # when self.best_only = True, store the best submission based on this order
     ORDER = ['AC', '_AC', 'WA', 'TLE', 'MLE', 'OLE', 'IR', 'RTE', 'CE', 'IE', 'AB']
-    reid = re.compile(r'<tr id="(\d*)">\n<td class="sub-result (\w*)">.*?<a href="/user/(\w*)">', re.DOTALL)
+    # user sub_id result score
+    reid = re.compile(r'<a href="/user/(\w*)">.*?<a href="/submission/(\d*)">.*?<div class="sub-result (\w*)">\n<div class="score">(\d*)', re.DOTALL)
 
     def __init__(self, problem_code, cookies, best_only, echo=print):
         self.code = problem_code
@@ -41,17 +42,17 @@ class SubmissionDownloader:
             page_num += 1
         self.echo('Downloaded {} page(s) of {} submission(s).'.format(page_num - 1, len(self.ids)))
 
-        self.ids = [(sub[0], self.ORDER.index(sub[1]), sub[2]) for sub in self.ids]
+        self.ids = [(sub[1], self.ORDER.index(sub[2]), sub[3], sub[0]) for sub in self.ids]
 
         if self.best_only:
             self.echo('Parsing submissions and only storing best...')
             user_mp = {}
             for sub in self.ids:
                 try:
-                    user_mp[sub[2]] = min(user_mp[sub[2]], (sub[1], sub[0]))
+                    user_mp[sub[3]] = min(user_mp[sub[2]], (sub[1], sub[2], sub[0]))
                 except KeyError:
-                    user_mp[sub[2]] = (sub[1], sub[0])
-            self.ids = list(map(itemgetter(1), user_mp.values()))
+                    user_mp[sub[3]] = (sub[1], sub[2], sub[0])
+            self.ids = list(map(itemgetter(2), user_mp.values()))
         else:
             self.ids = list(map(itemgetter(0), self.ids))
 
