@@ -49,7 +49,7 @@ class SubmissionDownloader:
             user_mp = {}
             for sub in self.ids:
                 try:
-                    user_mp[sub[3]] = min(user_mp[sub[2]], (sub[1], sub[2], sub[0]))
+                    user_mp[sub[3]] = min(user_mp[sub[3]], (sub[1], sub[2], sub[0]))
                 except KeyError:
                     user_mp[sub[3]] = (sub[1], sub[2], sub[0])
             self.ids = list(map(itemgetter(2), user_mp.values()))
